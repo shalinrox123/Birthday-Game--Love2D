@@ -2,6 +2,7 @@ require "button"
 require "ShopRite"
 require "iSpy"
 require "wario"
+require "racing"
 
 
 
@@ -28,6 +29,9 @@ function love.update(dt)
 	if currFrame == "wario" then 
 		if updateClothes() then createButton() end
 	end
+
+	if currFrame == "racing" then updateRacing() end
+	--love.timer.sleep(.5)
 end
 
 
@@ -36,6 +40,9 @@ function love.draw()
 	if currFrame == "ShopRite" then drawBlock() end
 	if currFrame == "iSpy" then drawiSpy() end
 	if currFrame == "wario" then drawWario() end
+	if currFrame == "racing" then drawRacing() end
+
+	if currFrame == "racing" then updateRacing() end
 	drawButtons()
 end
 
@@ -52,6 +59,7 @@ function love.mousepressed(x, y, button)
 	end
 
 	if currFrame == "wario" then pickClothes(x,y,button) end
+	--print(x,y)
 end
 
 function love.mousereleased(x, y, button)
@@ -73,6 +81,9 @@ end
 
 function love.keypressed( key )
 	if key == "q" then love.event.quit "" end
+	if key == "z" then pos = {0,300} end
+	if key == "x" then pos = {800, 300} end
+
 end
 
 
