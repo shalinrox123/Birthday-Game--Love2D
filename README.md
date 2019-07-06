@@ -1,4 +1,4 @@
-# Birthday-Game--Love2D
+# Birthday Game -Love2D
 simple games in one flash game. like iSpy, dress up, cooking mama and more. All done through Love2D and GL
 
 ## Libraries Used
