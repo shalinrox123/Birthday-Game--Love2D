@@ -1,2 +1,14 @@
 # Birthday-Game--Love2D
-simple games in one flash game. like iSpy, dress up, cooking mama and more. all done through Love2D and GL
+simple games in one flash game. like iSpy, dress up, cooking mama and more. All done through Love2D and GL
+
+## Libraries Used
+* [shaders](https://github.com/SkyVault/Love2DTutorialSeries/tree/master/Shaders/Part2Final)
+* [camera.lua](https://github.com/davisdude/Brady)
+
+## Games
+- [x] Drag and Drop number safe (327)
+- [x] iSpy in the dark
+- [x] Dress up Wario
+- [ ] Top Down Sonic Racing
+- [ ] Cooking Mama
+- [ ] TBA
