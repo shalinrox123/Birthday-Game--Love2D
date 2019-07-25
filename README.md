@@ -9,6 +9,7 @@ simple games in one flash game. like iSpy, dress up, cooking mama and more. All 
 - [x] Drag and Drop number safe (327)
 - [x] iSpy in the dark
 - [x] Dress up Wario
-- [ ] Top Down Sonic Racing
+- [x] Top Down Sonic Racing
 - [ ] Cooking Mama
+- [ ] Mock Discord
 - [ ] TBA
