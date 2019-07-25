@@ -30,7 +30,9 @@ function love.update(dt)
 		if updateClothes() then createButton() end
 	end
 
-	if currFrame == "racing" then updateRacing() end
+	if currFrame == "racing2" then 
+		if updateRacing() then createButton() end
+	end
 	--love.timer.sleep(.5)
 end
 
@@ -40,9 +42,7 @@ function love.draw()
 	if currFrame == "ShopRite" then drawBlock() end
 	if currFrame == "iSpy" then drawiSpy() end
 	if currFrame == "wario" then drawWario() end
-	if currFrame == "racing" then drawRacing() end
-
-	if currFrame == "racing" then updateRacing() end
+	if currFrame == "racing2" then drawRacing()  end
 	drawButtons()
 end
 
@@ -80,9 +80,10 @@ function releaseOver(mx, my, a, arr)
 end
 
 function love.keypressed( key )
-	if key == "q" then love.event.quit "" end
-	if key == "z" then pos = {0,300} end
-	if key == "x" then pos = {800, 300} end
+	if key == "q" then 
+		print("Quitting")
+		love.event.quit "" 
+	end
 
 end
 
