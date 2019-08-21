@@ -3,7 +3,8 @@ require "ShopRite"
 require "iSpy"
 require "wario"
 require "racing"
-
+require "discord"
+require "cooking"
 
 
 color = {0,0,0,1}
@@ -33,7 +34,13 @@ function love.update(dt)
 	if currFrame == "racing2" then 
 		if updateRacing() then createButton() end
 	end
-	--love.timer.sleep(.5)
+
+	if currFrame == "discord" then 
+		if updateScreen() then createButton() end
+	end
+
+	if currFrame == "cooking" then updateMama() end
+
 end
 
 
@@ -43,6 +50,8 @@ function love.draw()
 	if currFrame == "iSpy" then drawiSpy() end
 	if currFrame == "wario" then drawWario() end
 	if currFrame == "racing2" then drawRacing()  end
+	if currFrame == "discord" then drawScreen()  end
+	if currFrame == "cooking" then drawMama()  end
 	drawButtons()
 end
 
@@ -59,23 +68,26 @@ function love.mousepressed(x, y, button)
 	end
 
 	if currFrame == "wario" then pickClothes(x,y,button) end
+	if currFrame == "cooking" then press(x,y,button) end
 	--print(x,y)
 end
 
 function love.mousereleased(x, y, button)
 	if currFrame == "ShopRite" then dropBlock(x,y,button) end
 	if currFrame == "wario" then  dropClothes(x,y,button) end
+	if currFrame == "discord" then clickPost(x,y,button) end
+	if currFrame == "cooking" then release(x,y,button) end
 	checkButton(x,y, button)
 	
 end
 
 function releaseOver(mx, my, a, arr)
 	for i=1, table.getn(arr) do
-	if mx >= a.x and mx <= a.x + a.w then
-	    if my >= a.y and my < a.y + a.h then
-	        return true
-	    end
-	end
+		if mx >= a.x and mx <= a.x + a.w then
+		    if my >= a.y and my < a.y + a.h then
+		        return true
+		    end
+		end
 	end
 end
 
