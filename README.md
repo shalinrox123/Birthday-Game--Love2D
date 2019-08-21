@@ -11,4 +11,5 @@ simple games in one flash game. like iSpy, dress up, racing and more. All done t
 - [x] Dress up Wario
 - [x] Top Down Sonic Racing
 - [x] Mock Discord
-- [ ] TBA
+- [ ] MineCraft X Mario 
+- [ ] Cooking Mama
