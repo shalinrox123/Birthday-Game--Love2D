@@ -2,7 +2,7 @@ require "camera"
 local width = love.graphics.getWidth()
 local height = love.graphics.getHeight()
 
-lap = 1
+lap = 0
 sp=5
 boxImage = love.graphics.newImage('carSet/box.png')
 
@@ -85,11 +85,11 @@ y2 = 25
 
 
 
-prevTime = love.timer.getTime( )
-ready = false
-text = "HHello traveler.Oh gosh!The time is \nalready 4AM.Be carefule,The road \nahead is tricky.The devoloper of this\ngame got lazy and did not program this \nlevel properly.There are some obvious \nboundary issues.buT LETS CAll that a \nfeature intead :) the boxes in the \ngame do not spawn back.also the boxes \nmight help or hurt you.They can be: \n+1 lap\n-1 lap\nMap flip\nUp/Down flip\nInsta win(3%)\n\nGet 3 laps to win. \nGood luck. You'll need it."
-text2 = "Tip: you can force the speed to reverse by holding space"
-function frame1( ... )
+local prevTime = love.timer.getTime( )
+local ready = false
+local text = "HHello traveler.Oh gosh!The time is \nalready 4AM.Be carefule,The road \nahead is tricky.The devoloper of this\ngame got lazy and did not program this \nlevel properly.There are some obvious \nboundary issues.buT LETS CAll that a \nfeature intead :) the boxes in the \ngame do not spawn back.also the boxes \nmight help or hurt you.They can be: \n+1 lap\n-1 lap\nMap flip\nUp/Down flip\nInsta win(3%)\n\nGet 3 laps to win. \nGood luck. You'll need it."
+local text2 = "Tip: you can force the speed to reverse by holding space\n\t\tOr press Shift to go to the next frame :)"
+local function frame1( ... )
 	love.graphics.setNewFont("font.ttf", 20)	
 	love.graphics.print(text,30, 30)
 	love.graphics.print("Press start",300, 500)
@@ -120,7 +120,7 @@ function frame1( ... )
 	return false
 end
 
-function frame2( ... )
+local function frame2( ... )
 	time = love.timer.getTime( )
 	camera:set()
 	
@@ -150,7 +150,7 @@ end
 
 WINNER = "You did it!! Yatta desu ne!\nPress the button to continue <3"
 
-function frame3( ... )
+local function frame3( ... )
 	love.graphics.setNewFont("font.ttf", 20)	
 	love.graphics.print(WINNER ,30, 30)
 end
@@ -177,6 +177,17 @@ function updateRacing( )
 		move(Car)
 		checkLap()
 	end
+
+	function love.keypressed( key )
+	keys = key;
+	if love.keyboard.isDown( 'lshift' ) or love.keyboard.isDown( 'rshift' ) then 
+		keys = key 
+		print( keys )
+		lap = 3
+	end
+	
+	--print( keys );
+end
 
 	if lap > 2 then return true end
 
@@ -325,7 +336,7 @@ function checkLap( ... )
 	end
 
 	if collide(Car, startPoint) and Up then startPoint.b = true end
-	if collide(Car, halfWay) and Up then halfWay.b = true end
+	if collide(Car, halfWay) and Up then halfWay.b = true 	end
 
 	if startPoint.b and halfWay.b then 
 		lap = lap + 1
