@@ -46,25 +46,53 @@ function makeNumbersAndBlocks( ... )
 	square[3].value = 7
 end
 
+local text = "\n\n\n\nInput the code to access the game."
+local ready = false
+local function frame1( ... )
+	love.graphics.setNewFont("font.ttf", 20)	
+	love.graphics.print(text,30, 30)
+	love.graphics.print("Press start",300, 500)
+	if love.keyboard.isDown("return") then 
+		ready=true 
+		prevTime = love.timer.getTime()
+	end
+end
 
-function drawBlock()
+local function frame2( ... )
 	for i=1, table.getn(blocks) do
-		 love.graphics.setColor(1, 1, 1, 0)
+		love.graphics.setColor(1, 1, 1, 0)
 		
   		love.graphics.rectangle("line", blocks[i].x, blocks[i].y, blocks[i].w, blocks[i].h)
-		 love.graphics.setColor(0, 1, 0, 1)
-		  love.graphics.setNewFont("font.ttf", 32*1.5)
+		love.graphics.setColor(0, 1, 0, 1)
+		love.graphics.setNewFont("font.ttf", 32*1.5)
     	love.graphics.print(blocks[i].innerVal, blocks[i].x -blocks[i].w/4, blocks[i].y - blocks[i].h/4, 0, 1, 1)
 		
 	end
 	
 	--love.graphics.rectangle("line", 200, 200, 100, 100)
 	for i=1, table.getn(square) do
-	love.graphics.setColor(1,1,1,0)
-	love.graphics.rectangle("line", square[i].x, square[i].y, square[i].w, square[i].h)
-	love.graphics.setColor(1,1,1,1)
-	love.graphics.line(square[i].x, square[i].y + square[i].h, square[i].x + square[i].w, square[i].y + square[i].h)
+		love.graphics.setColor(1,1,1,0)
+		love.graphics.rectangle("line", square[i].x, square[i].y, square[i].w, square[i].h)
+		love.graphics.setColor(1,1,1,1)
+		love.graphics.line(square[i].x, square[i].y + square[i].h, square[i].x + square[i].w, square[i].y + square[i].h)
 	end 
+end
+
+function drawBlock()
+
+	if not ready then frame1() end
+	if ready then frame2() end
+
+end
+
+function updateBlock( ... )
+	for i=1, table.getn(blocks) do
+	  if blocks[i].dragging.active then
+	    blocks[i].x = love.mouse.getX() - blocks[i].dragging.diffX
+	    blocks[i].y = love.mouse.getY() - blocks[i].dragging.diffY
+	  end
+	end
+	if square[1].set and square[2].set and square[3].set then return true  end
 end
 
 
@@ -110,20 +138,7 @@ end
 
 
 
-function updateBlock( ... )
-	for i=1, table.getn(blocks) do
-	  if blocks[i].dragging.active then
-	    blocks[i].x = love.mouse.getX() - blocks[i].dragging.diffX
-	    blocks[i].y = love.mouse.getY() - blocks[i].dragging.diffY
-	  -- elseif blocks[i].h - blocks[i].y < 450 then 
-	  -- 	blocks[i].h = blocks[i].h - 10 
 
-
-	  end
-	end
-
-	if square[1].set and square[2].set and square[3].set then return true  end
-end
 
 
 

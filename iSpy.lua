@@ -31,7 +31,7 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords){
 		float atten = 1/(constant + linear * distance + quadratic * (distance * distance) );
 
 
-		diffuse += light.diffuse * (atten * atten)/1.25;
+		diffuse += light.diffuse * (atten * atten);
 	}
 
 	diffuse = clamp(diffuse, 0, 1);
@@ -75,9 +75,20 @@ function makeiSpy( ... )
 
 end
 
-function drawiSpy( ... )
+local text = "Your room is very mess and you have a \npower outage. Find some stuff in your \nroom with a flash light. \n\nno time limit\n\nsorry i didnt draw your room messy "
+local ready = false
+local function frame1( ... )
+	love.graphics.setNewFont("font.ttf", 20)	
+	love.graphics.print(text,30, 30)
+	love.graphics.print("Press start",300, 500)
+	if love.keyboard.isDown("return") then 
+		ready=true 
+		prevTime = love.timer.getTime()
+	end
+end
 
-	if not checkValues() then
+local function frame2( ... )
+		if not checkValues() then
 		love.graphics.setShader(shader)
 		shader:send("screen", {love.graphics.getDimensions()})
 
@@ -115,6 +126,12 @@ function drawiSpy( ... )
 	if values[4] > 0 then love.graphics.print("Box of Cards", 5, 85,0,1,1) end 
 	if values[5] > 0 then love.graphics.print("Duckie", 5, 100,0,1,1) end
 	if values[6] > 0 then love.graphics.print("War Hammer 40K", 5, 115,0,1,1) end 
+
+end
+
+function drawiSpy( ... )
+if not ready then frame1() end 
+if ready then frame2() end
 
 
 	

@@ -36,10 +36,12 @@ function love.update(dt)
 	end
 
 	if currFrame == "discord" then 
-		if updateScreen() then createButton() end
+		if updateScreen() then  createButton() end
 	end
 
-	if currFrame == "cooking" then updateMama() end
+	if currFrame == "cooking" then
+		if  updateMama() then createButton() end
+	end
 
 end
 

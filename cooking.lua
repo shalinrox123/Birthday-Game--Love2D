@@ -5,11 +5,13 @@ rect = {
     h = 100,
     dragging = { active = false, diffX = 0, diffY = 0 }
   }
-egg={
-		x=200,
-		y=100,
-		r=30
-	}
+-- egg={
+-- 		x=200,
+-- 		y=100,
+-- 		r=30
+-- 	}
+
+eggs={}
 holdEgg = false
 canCut = false
 canCoat = false
@@ -18,8 +20,7 @@ ingredients={}
 wasDown = false --indicates mouse state on previous frame
 
 
-i={
-	x=500,
+local i={	x=500,
 	baseX = 480,
 	y= 300,
 	baseY = 300,
@@ -37,26 +38,60 @@ addY = 34*2
 maxMove = 3
 maxMoveY = 0
 moveOver = 0
-step = 0
+step = 1
 
 r = 0
 
 function nextStep( ... )
-	love.timer.sleep(2.5)
+	--love.timer.sleep(2.5)
 	step = step + 1
 end
 
 function part1( ... )
+	cutting = love.graphics.newImage("Cooking/cutting board.png")
+	love.graphics.draw(cutting,0,0)
+
+	love.graphics.setColor(0,0,0,1)
+	text = "Cut along the red lines"
+	love.graphics.print(text,30, 530)
+	love.graphics.setColor(1,1,1,1)
+
+	
 	cutSuga()
    	lineFlash()
+   	love.graphics.setColor(1,1,1,1)
    	if followLine() then nextStep() end
 end
 
 function part2( ... )
+	love.graphics.draw(tablei,0,0)
+	love.graphics.setColor(0,0,0,1)
+	text = "Click on the egg and crack it on the \nbowl"
+	love.graphics.print(text,30, 530)
+	love.graphics.setColor(1,1,1,1)
+	if #eggs == 0  then makeEggs() end
 	if crackEgg() then nextStep() end
 end
 
+function makeEggs( ... )
+	-- body
+	for i=1,7 do 
+		local egg ={
+			x= love.math.random(300, 750),
+			y=love.math.random(50, 305),
+			r=30,
+			hold = false
+		}
+		table.insert(eggs,egg)
+	end
+end
+
 function part3( ... )
+	love.graphics.draw(tablei,0,0)
+	love.graphics.setColor(0,0,0,1)
+	text = "Drag ingredients into the mixing bowl"
+	love.graphics.print(text,30, 530)
+	love.graphics.setColor(1,1,1,1)
 	local w =0
 	local h = 0
 	w, h = love.window.getMode()
@@ -64,9 +99,14 @@ function part3( ... )
 	love.graphics.setNewFont("font.ttf", 20)
 	list = {"sugar", "flour", "baking soda", "vanilla extract", "milk", "oil"}
 	for i=1,#ingredients do
-			love.graphics.rectangle("fill", ingredients[i].x, ingredients[i].y, ingredients[i].w, ingredients[i].h)
+			
+			--love.graphics.rectangle("line", ingredients[i].x, ingredients[i].y, ingredients[i].w, ingredients[i].h)
+			if ingredients[i].w > 0 then listVal = "Cooking/"..list[i]..".png"
+			else listVal = "Cooking/emptybowl.png" end
+			ing = love.graphics.newImage(listVal)
+			love.graphics.draw(ing, ingredients[i].x, ingredients[i].y)
 			x,y = love.mouse.getPosition()
-			if x > ingredients[i].x  and x < ingredients[i].x + ingredients[i].w
+		if x > ingredients[i].x  and x < ingredients[i].x + ingredients[i].w
 		  and y > ingredients[i].y  and y < ingredients[i].y + ingredients[i].h then
 		  	love.graphics.print(list[i], w/2, 10)
 	  end
@@ -76,14 +116,40 @@ function part3( ... )
 	print(#ingredients)
 	if ingredientsCounter == #ingredients then nextStep() end
 
+	
+	love.graphics.draw(love.graphics.newImage("Cooking/mix.png"), rect.x, rect.y)
+	--love.graphics.rectangle("line", rect.x, rect.y, rect.w, rect.h)
 	--also make it so that only what is needed should be picked up?
 end
 
-
+mixValue = 1
+local boxes = {}
+tablei = love.graphics.newImage("Cooking/table.png")
+touchCounter = 0
 function part4( ... )
-		love.graphics.setColor(.7,.5,.8,1)
-	love.graphics.rectangle("fill", rect.x, rect.y, rect.w, rect.h)
-	love.graphics.setColor(.1,1,.8,1)
+
+	love.graphics.draw(tablei,0,0)
+
+	love.graphics.setColor(0,0,0,1)
+	text = "Mix."
+	love.graphics.print(text,30, 530)
+	love.graphics.setColor(1,1,1,1)
+
+	mixBowl = "Cooking/bowl"..mixValue..".png"
+	mix = love.graphics.newImage(mixBowl)
+	w,h = mix:getDimensions()
+
+	love.graphics.draw(mix, 400, 300,r, 2,2,w/2,h/2)
+	local img = {
+		x=400, y =300, w = w*2, h=h*2
+	}
+
+	if #boxes == 0 and img ~= nill then	createBoxes(img) end
+	checkTouch(boxes)
+
+	-- love.graphics.setColor(.7,.5,.8,1)
+	-- --love.graphics.rectangle("fill", rect.x, rect.y, rect.w, rect.h)
+	-- love.graphics.setColor(.1,1,.8,1)
 
 	--SPIN???
 	--use r in graphics to rotate
@@ -91,30 +157,212 @@ function part4( ... )
 	--also have 4 points the image must corss in succession for one full roation
 	x,y = love.mouse.getPosition()
 	
-	w,h = sugaSpreadSheet:getDimensions()
-	img = {
-		x=200, y =200, w = w, h=h
-	}
-	love.graphics.draw(sugaSpreadSheet, img.x, img.y, r, 1,1, w/2,h/2)
+	--w,h = sugaSpreadSheet:getDimensions()
+	
+	--love.graphics.draw(sugaSpreadSheet, img.x, img.y, r, 1,1, w/2,h/2)
 	if true
-	and x > img.x - img.w  and x < img.x + img.w*2
-	and y > img.y - img.h and y < img.y + img.h*2 then
+	and x > img.x - img.w/2  and x < img.x + img.w/2
+	and y > img.y - img.h/2 and y < img.y + img.h/2 then
 		r = math.atan2(y-img.x, x-img.y)
 	end
-	print(r)
+	--print(r)
+
+	-- for i=1,#boxes do
+	-- 	--love.graphics.rectangle("line", boxes[i].x, boxes[i].y, boxes[i].w, boxes[i].h)
+	-- end
 	
+	if touchCounter == 16 then
+		boxes={}
+	elseif touchCounter >= 32 and mixValue < 5 then
+		boxes={}
+		touchCounter = 0
+		mixValue = mixValue+1
+	end
+
+
+	if mixValue >= 5 then nextStep() end 
 end
+
+function createBoxes(img)
+	pi = 0
+	for i = 1, 16 do
+		print(#boxes)
+		pi = math.pi/8 + pi
+		rect = {
+			x = math.cos(pi)*img.w*.4 + img.x - 75,
+			y = math.sin(pi)*img.h*.4 + img.y - 75,
+			w = 150,
+			h = 150
+		}
+		table.insert(boxes,rect)
+	end
+end
+
+touchCounter = 0
+function checkTouch(a)
+	x,y = love.mouse.getPosition()
+	for i = 1, #a do
+		if isHover(a[i], x,y)then 
+			--print(true, a[i].x, a[i].y)
+			a[i].w=0
+			a[i].h=0
+			touchCounter = touchCounter+1
+			print(touchCounter)
+		end
+	end
+end
+
+
+function isHover(a,mx, my)
+	   if ((mx >= a.x + a.w) or
+		   (mx <= a.x) or
+		   (my >= a.y + a.h) or
+		   (my <= a.y)) then
+			  return false 
+	   else return true
+           end
+	end
+
+
+
+
+
+
+
+
+local num = ''
+numpad={}
+function part5( ... )	
+	love.graphics.setColor(1,1,1,1)
+	oven = love.graphics.newImage("Cooking/oven.png")
+	love.graphics.draw(oven,0,0)
+	text = "Enter in the correct temperature"
+	love.graphics.print(text,30, 10)
+	if #numpad==0 then createNumPad() end
+	checkNumpad(numpad)
+	if not love.mouse.isDown(1) then down = true end
+
+
+	for i=1,#numpad do
+		love.graphics.setColor(numpad[i].color)
+		love.graphics.rectangle("fill", numpad[i].x, numpad[i].y, numpad[i].w, numpad[i].h)
+			x = 1
+			if i < 10 then x =i
+			elseif i == 11 then x = 0
+			elseif i == 10 then x = "<-"
+			elseif i == 12 then x="E"
+			end
+			love.graphics.setColor(0,0,0)
+			love.graphics.setNewFont("font.ttf", 10)	
+			love.graphics.print(x, numpad[i].x + numpad[i].w/4, numpad[i].y+numpad[i].h/10)
+	end	
+
+	love.graphics.setNewFont("font.ttf", 15)
+	love.graphics.setColor(1,1,1,1)
+	love.graphics.print(num, 350, 80)
+
+end
+
+function createNumPad()
+
+	y = 73
+	for i = 1, 4 do
+		x=590
+		for j=1,3 do
+			
+			local rect = {
+				x = x,
+				y = y,
+				w = 21,
+				h = 15
+			}
+			x=x+22
+			table.insert(numpad,rect)
+		end
+		y=y+16
+	end
+end
+
+function checkNumpad(a)
+	x,y = love.mouse.getPosition()
+	for i = 1, #a do
+		if isHover(a[i], x,y) and love.mouse.isDown(1) and down then
+			a[i].color={1,0,0,1} 
+			if num == 0 and i < 10 then num = i 
+			elseif i < 10 then num = num..i
+			elseif i == 11 then num = num .. 0 
+			elseif i == 10 and #num > 0 then num = num:sub(1, -2) 
+			elseif i == 12 then checkVal(num)
+			end
+			--print(num,i)
+			down = false
+		elseif isHover(a[i], x,y)then 
+			a[i].color={1,1,1,.5}
+		else
+			a[i].color={1,1,1,1}
+		end
+	end
+end
+
+function checkVal(a )
+	if a ~= "1017" then num = ''
+	else nextStep() end
+end
+
+
+linePi = -math.pi/2
+piCounter = 0
+function part6( ... )
+	love.graphics.setColor(1,1,1,1)
+	love.graphics.draw(tablei,0,0)
+	love.graphics.setColor(0,0,0,1)
+	text = "Wait...\nBaking"
+	love.graphics.print(text,30, 530)
+	love.graphics.setColor(1,1,1,1)
+	love.graphics.setColor(1,.5,7,1)
+	love.graphics.circle("fill", 400, 300, 300)
+	love.graphics.setColor(1,1,1,1)
+	love.graphics.circle("fill",400,300, 280)
+	love.graphics.setColor(0,0,0,1)
+	love.graphics.setLineWidth(6)
+	love.graphics.circle("fill", 400, 300, 6)
+	love.graphics.line(400,300, math.cos(linePi)*275 + 400, math.sin(linePi)*275 +300 )
+	linePi = linePi + math.pi/20
+	if linePi >= math.pi*2 then
+		linePi = 0
+		piCounter = piCounter + 1
+	end
+	if piCounter >= 5 then nextStep() end
+	--love.newImage("Cooking/table.png")
+end
+
+
+
+function part7( ... )
+	love.graphics.draw(tablei,0,0)
+	muffin =  love.graphics.newImage("Cooking/muffin.png")
+	local w = 0
+	local h = 0
+	w,h = muffin:getDimensions()
+	love.graphics.setColor(1,1,1,1)
+	love.graphics.draw(muffin,400,300,0,1,1, w/2,h/2)
+end
+
 
 function drawMama( ... )
 
 	-- if not canCut then
 	--
 	-- end
+	love.graphics.setNewFont("font.ttf", 20)
 
 	if step == 1 then part1()
 	elseif step == 2 then part2()
 	elseif step == 3 then part3()
 	elseif step == 4 then part4()
+	elseif step == 5 then part5()
+	elseif step == 6 then part6()
+	elseif step == 7 then part7()
 	end
 
 	--coatChicken()
@@ -138,7 +386,7 @@ if step == 0 then step = 1 end
 	
 		 end
 
-
+		 if step == 7 then return true end
 end
 
 
@@ -269,7 +517,7 @@ function followLine( ... )
 		end
 		--row = row - 3
 	end
-	print(i.cut)
+	--print(i.cut)
 	return i.cut >=4
 end
 
@@ -282,22 +530,26 @@ end
 
 
 
-
+iPi = -math.pi
 function createIngredients(size)
-  X =50
+  --X =50
+ X = math.cos(iPi)*rect.w +  rect.x*1.25
   if size == nil then size = 0 end
 	for i=1,size do
+
 		rectangle={
 			x=X,
 			baseX=X,
-			y= 100,
-			baseY = 100,
+			y= math.sin(iPi)*rect.h +rect.y+1,
+			baseY = math.sin(iPi)*rect.h +rect.y+1,
 			w = 45,
 			h=60,
 			placed = false,
 			dragging = { active = false, diffX = 0, diffY = 0 }
 		}
-		X = X + rectangle.w + 5
+		iPi = math.pi/5 + iPi
+		 X = math.cos(iPi)*rect.w +  rect.x*1.25
+
 		if #ingredients < size then
 			table.insert(ingredients,rectangle)
 		end
@@ -308,26 +560,38 @@ end
 
 
 
-
+crackedCounter=0
 function crackEgg( ... )
+	bowlLine = {x=200, y = 400, w=20, h =20}
+	love.graphics.draw(love.graphics.newImage("Cooking/mix.png"),bowlLine.x-150,bowlLine.y)
+	--love.graphics.rectangle("line", bowlLine.x, bowlLine.y, bowlLine.w, bowlLine.h)
 	x,y = love.mouse.getPosition()
-	if holdEgg then
-		egg.x = x
-		egg.y = y
+	
+	for i=1,#eggs do 
+		if eggs[i].hold then
+			eggs[i].x = x
+			eggs[i].y = y
+		end
+
+		--love.graphics.circle("line", eggs[i].x, eggs[i].y, eggs[i].r)
+		
+		--love.graphics.draw(love.graphics.newImage("Cooking/egg.png") ,eggs[i].x, eggs[i].y,0,eggs[i].r*2/eggs[i].r,eggs[i].r*2/eggs[i].r,eggs[i].r/2+8,eggs[i].r/2+8)
+		love.graphics.draw(love.graphics.newImage("Cooking/egg.png") ,eggs[i].x, eggs[i].y,0,eggs[i].r*2/eggs[i].r,eggs[i].r*2/eggs[i].r,eggs[i].r/2+8,eggs[i].r/2+8)
+		if ((eggs[i].x - eggs[i].r/2 >= bowlLine.x + bowlLine.w) or --to get a little more tht the edge of the egg
+			   (eggs[i].x + eggs[i].r  <= bowlLine.x) or
+			   (eggs[i].y - eggs[i].r>= bowlLine.y + bowlLine.h) or
+			   (eggs[i].y + eggs[i].r <= bowlLine.y)) then
+		 elseif eggs[i].hold then
+		 	--print(egg.r)
+		 	crackedCounter = crackedCounter + 1
+		 	eggs[i].r = 0 -- remove egg
+		 	eggs[i].hold = false
+		 	--return true
+		 end
 	end
 
-	love.graphics.circle("fill", egg.x, egg.y, egg.r)
-	love.graphics.rectangle("fill", 100, 100, 20, 200)
-
-	if ((egg.x - egg.r/2 >= 100 + 20) or --to get a little more tht the edge of the egg
-		   (egg.x + egg.r  <= 100) or
-		   (egg.y - egg.r>= 100 + 200) or
-		   (egg.y + egg.r <= 100)) then
-	 else
-	 	--print(egg.r)
-	 	egg.r = 0 -- remove egg
-	 	return true
-	 end
+	--print(crackedCounter)
+	if crackedCounter == #eggs then return true end
 end
 
 -- function cutChicken( ... )
@@ -352,7 +616,7 @@ if step == 3 then
 	  and x > ingredients[i].x  and x < ingredients[i].x + ingredients[i].w
 	  and y > ingredients[i].y  and y < ingredients[i].y + ingredients[i].h
 	  then
-	  	print("true")
+	  	--print("true")
 	    ingredients[i].dragging.active = true
 	    ingredients[i].dragging.diffX = x - ingredients[i].x
 	    ingredients[i].dragging.diffY = y - ingredients[i].y
@@ -360,16 +624,17 @@ if step == 3 then
 	  end
 	end
 end
-
-if step == 2 then
-	if ((egg.x - egg.r >= x) or
-		   (egg.x + egg.r  <= x) or
-		   (egg.y - egg.r>= y) or
-		   (egg.y + egg.r <= y)) then
-	 else
-	 	holdEgg = true
-	 end
-	end
+for i = 1, #eggs do 
+	if step == 2 then
+		if ((eggs[i].x - eggs[i].r >= x) or
+			   (eggs[i].x + eggs[i].r  <= x) or
+			   (eggs[i].y - eggs[i].r>= y) or
+			   (eggs[i].y + eggs[i].r <= y)) then
+		 else
+		 	eggs[i].hold = true
+		 end
+		end
+end
 
 	 -- if button == 1
 	 --  and x > rect.x  and x < rect.x + rect.w
@@ -406,7 +671,7 @@ end
 
 
 function release(x, y, button)
-  if button == 1 then rect.dragging.active = false end
+  --if button == 1 then rect.dragging.active = false end
   for i=1, #ingredients do
   	if button == 1 then
   		if releasedOver(ingredients[i], rect) then

@@ -10,13 +10,16 @@ function createButton()
 		h=30
 	}
 
-	table.insert(buttons, button)
+  if table.getn(buttons) == 0 then
+	 table.insert(buttons, button)
+  end
 end
 
 function drawButtons( ... )
 	for i=1, table.getn(buttons) do
 		 love.graphics.setColor(1, 1, 1, 1)
-  		love.graphics.rectangle("fill", buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h)
+     love.graphics.draw(love.graphics.newImage("button.png"), buttons[i].x-5, buttons[i].y-5)
+  		--love.graphics.rectangle("fill", buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h)
 		 end
 end
 
@@ -36,7 +39,29 @@ function checkButton(x,y,click )
   				boxes = {}
   				clearButton()
   				print("going to wario")
-  			end
+  			elseif currFrame == "wario" then
+  				nextFrame()
+  				clothes = {} 
+  				body = {}
+  				clearButton()
+  				print("IT'S 4AM")
+       elseif currFrame == "racing2" then
+          nextFrame()
+          Car = {} 
+          map = {}
+          car = {}
+          boxSet = {}
+          clearButton()
+          print("The boys are online!")
+         elseif currFrame == "discord" then
+          nextFrame()
+          posts = {} 
+          lives = {}
+          car = {}
+          boxSet = {}
+          clearButton()
+          print("Hungry?")
+        end
 		end
 		end
 end

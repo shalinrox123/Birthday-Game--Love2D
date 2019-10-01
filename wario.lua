@@ -169,7 +169,19 @@ feet = {
 
 body = {feet, hands, head, legs, torso}
 
-function drawWario()
+local text = "*NSFW warning*\n\nyour naked girlfriend is delirious \nand needs help getting dressed. \n\nmake sure she is completly covered."
+local ready = false
+local function frame1( ... )
+	love.graphics.setNewFont("font.ttf", 20)	
+	love.graphics.print(text,30, 30)
+	love.graphics.print("Press start",300, 500)
+	if love.keyboard.isDown("return") then 
+		ready=true 
+		prevTime = love.timer.getTime()
+	end
+end
+
+local function frame2( ... )
 	love.graphics.setBackgroundColor(26/255,89/255,196/255,1) -- wall
 	love.graphics.setColor(0,0,0,1) --black
 	love.graphics.rectangle("fill", 50,50, 700, 500) -- whiteboard frame
@@ -179,22 +191,37 @@ function drawWario()
 	skin = love.graphics.newImage("wario set/body.png")
 	love.graphics.draw(skin, 230, 150,0,1.5, 1.5)
 
-	-- for i=1, table.getn(body) do
-	-- 	love.graphics.setColor(1,0,1,1) 
-	-- 	--print(body[i].x, body[i].y)
-	-- 	love.graphics.rectangle("fill", body[i].x, body[i].y, body[i].w, body[i].h) 
-	-- end
-
-
 	for i=1, table.getn(clothes) do
 			shirt = love.graphics.newImage("wario set/"..clothes[i].image..".png")
 			clothes[i].w, clothes[i].h = shirt:getDimensions( )
 			love.graphics.draw(shirt, clothes[i].x, clothes[i].y, 0, 1.5, 1.5)
 			--print(clothes[i].x, clothes[i].y)
 	end
+end
+
+
+function drawWario()
+	if not ready then frame1() end 
+	if ready then frame2() end
 
 end
 
+
+function updateClothes( ... )
+	if ready then
+	for i=1, table.getn(clothes) do
+	  if clothes[i].dragging.active then
+	    clothes[i].x = love.mouse.getX() - clothes[i].dragging.diffX
+	    clothes[i].y = love.mouse.getY() - clothes[i].dragging.diffY
+	  end
+	end
+	--create condition statement here so when the whole body is filled 
+	--the button will appear
+	if (clothes[1].set or clothes[2].set) and (clothes[3].set or clothes[4].set) and (clothes[5].set or clothes[6].set) and (clothes[7].set or clothes[8].set) and (clothes[9].set or clothes[10].set) then 
+		return true
+	end
+  end
+end
 
 function pickClothes(x,y,button )
 	for i=1, table.getn(clothes) do
@@ -267,7 +294,7 @@ function dropClothes( x,y,button )
 
 		end
 		end
-		print(clothes[i].value, clothes[i].set)
+		--print(clothes[i].value, clothes[i].set)
 	end
 
 
@@ -278,17 +305,3 @@ end
 
 
 
-function updateClothes( ... )
-	for i=1, table.getn(clothes) do
-	  if clothes[i].dragging.active then
-	    clothes[i].x = love.mouse.getX() - clothes[i].dragging.diffX
-	    clothes[i].y = love.mouse.getY() - clothes[i].dragging.diffY
-	  end
-	end
-	--create condition statement here so when the whole body is filled 
-	--the button will appear
-	if (clothes[1].set or clothes[2].set) and (clothes[3].set or clothes[4].set) and (clothes[5].set or clothes[6].set) and (clothes[7].set or clothes[8].set) and (clothes[9].set or clothes[10].set) then 
-		return true
-	end
-
-end
