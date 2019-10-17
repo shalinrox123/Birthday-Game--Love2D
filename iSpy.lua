@@ -53,6 +53,8 @@ light = {
 	a=0
 }
 
+ding =love.audio.newSource("sound/ding.wav", "static")
+
 local shader = nil
 local image = nil
 boxes = { {512, 151, 593, 147, 594, 161, 514, 164}, -- honey buns
@@ -69,6 +71,7 @@ whiteBoard = {165, 243, 165, 297, 110, 307, 108,250} -- white board
 
 
 function makeiSpy( ... )
+	collectgarbage()
 	image = love.graphics.newImage("room.png")
 	shader = love.graphics.newShader(shader_code)
 	love.mouse.setVisible(false)
@@ -161,11 +164,17 @@ function withinRange(box, mx, my)
 	end
 end
 
+function playAudio( ... )
+	if ding:isPlaying() then ding:stop() end
+	ding:play()
+end
 
 function checkBoxes()
 	x,y =love.mouse.getPosition( )
 	for i=1, table.getn(boxes) do
-		if withinRange(boxes[i], x,y) and values[i] > 0 then
+		if withinRange(boxes[i], x,y) and values[i] > 0 and ready then
+			--ding:setLooping(false)
+			
 			return true, i
 		end
 	end

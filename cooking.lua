@@ -38,9 +38,18 @@ addY = 34*2
 maxMove = 3
 maxMoveY = 0
 moveOver = 0
-step = 1
+step = 0
 
 r = 0
+playD = 0
+function playDing( ... )
+	if playD == 0 then
+		doneDing = love.audio.newSource("sound/ding.wav", "queue")
+		doneDing:isLooping(false)
+		doneDing:play()
+		playD = 1
+	end
+end
 
 function nextStep( ... )
 	--love.timer.sleep(2.5)
@@ -339,6 +348,7 @@ end
 
 
 function part7( ... )
+	playDing()
 	love.graphics.draw(tablei,0,0)
 	muffin =  love.graphics.newImage("Cooking/muffin.png")
 	local w = 0
@@ -354,6 +364,7 @@ function drawMama( ... )
 	-- if not canCut then
 	--
 	-- end
+	collectgarbage()
 	love.graphics.setNewFont("font.ttf", 20)
 
 	if step == 1 then part1()
@@ -456,9 +467,11 @@ function lineFlash( ... )
 	love.graphics.setColor(1, 0, 0, a)
 	if i.cut < 2 then
 		--love.graphics.circle("line", i.x, i.y, i.w/2)
+		love.graphics.polygon("fill",i.baseX-10, i.baseY-10, i.baseX+10,i.baseY-10, i.baseX, i.baseY)
 		love.graphics.line(i.baseX, i.baseY-5, i.baseX , i.baseY*1.75)
 	elseif i.cut < 4 then
 		--love.graphics.circle("line", i.x, i.y, i.w/2)
+		love.graphics.polygon("fill",i.baseX+10,i.baseY,i.baseX-1, i.baseY+10, i.baseX-1, i.baseY-10)
 		love.graphics.line(i.baseX, i.baseY, i.baseX*1.75 , i.baseY)
 	end
 end
@@ -510,7 +523,7 @@ function followLine( ... )
 		i.cut = i.cut +1
 		moveOver = 2
 		maxMove = maxMove - 1
-
+		playChop()
 		if maxMove <= 0 and maxMoveY - change >= -3 then
 			maxMoveY = maxMoveY - change
 			change = 1
@@ -522,7 +535,11 @@ function followLine( ... )
 end
 
 
-
+function playChop( ... )
+	chop = love.audio.newSource("sound/chop.wav", "static")
+	chop:isLooping(false)
+	chop:play()
+end
 
 
 

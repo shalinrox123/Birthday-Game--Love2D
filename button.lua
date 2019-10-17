@@ -4,7 +4,7 @@ buttons={}
 
 function createButton()
 	button={
-		x= love.graphics.getWidth()/2,
+		x= love.graphics.getWidth()/2-30,
 		y= love.graphics.getHeight()*2/3,
 		w=60,
 		h=30
@@ -17,8 +17,11 @@ end
 
 function drawButtons( ... )
 	for i=1, table.getn(buttons) do
-		 love.graphics.setColor(1, 1, 1, 1)
+		 love.graphics.setColor(0,0,0, .5)
+     love.graphics.rectangle("fill", buttons[i].x-3, buttons[i].y-3, buttons[i].w+6, buttons[i].h+6)
+     love.graphics.setColor(1, 1, 1, 1)
      love.graphics.draw(love.graphics.newImage("button.png"), buttons[i].x-5, buttons[i].y-5)
+
   		--love.graphics.rectangle("fill", buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h)
 		 end
 end
@@ -61,6 +64,15 @@ function checkButton(x,y,click )
           boxSet = {}
           clearButton()
           print("Hungry?")
+          elseif currFrame == "cooking" then
+          nextFrame()
+          eggs = {} 
+          SugaSprite = {}
+          boxes = {}
+          numpad = {}
+          ingredients = {}
+          clearButton()
+          print("HAPPY BIRTHDAY ON THE BED!")
         end
 		end
 		end

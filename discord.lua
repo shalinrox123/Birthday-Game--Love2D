@@ -31,7 +31,7 @@ function createPosts( ... )
 end
 
 life = 0
-bg = love.graphics.newImage('plainBG.png')
+local bg = love.graphics.newImage('plainBG.png')
 
 lives = {
 	{"fill", 103,277, 170,40},
@@ -99,6 +99,7 @@ function frame3( ... )
 end
 
 function drawScreen( ... )
+	collectgarbage()
 	if not ready then frame1() end
 	if ready  and not finished then frame2() end 
 	if ready and finished then frame3() end

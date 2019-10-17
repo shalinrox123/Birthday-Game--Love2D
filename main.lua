@@ -5,17 +5,31 @@ require "wario"
 require "racing"
 require "discord"
 require "cooking"
+require "fin"
 
 
 color = {0,0,0,1}
 function love.load()
 	love.window.setMode( 800, 600, {resizable = false, centered=true, minwidth=800, minheight=600} )
+	love.window.setTitle("Virtual Puzzle Box")
 	if currFrame == "ShopRite" then makeNumbersAndBlocks() end
 	
 end
 
-
+function playSong( ... )
+	bg = love.audio.newSource("sound/background.mp3", "stream")
+	bg:setVolume(.5)
+	bg:isLooping(true)
+	bg:play()
+end
+local toPlay = 0
 function love.update(dt)
+if toPlay == 0 then 
+	playSong()
+	toPlay = 1
+end
+
+
 	if currFrame == "ShopRite" then 
 		if updateBlock() then createButton() end
 	end
@@ -47,6 +61,7 @@ end
 
 
 function love.draw()
+	collectgarbage()
 	love.graphics.setBackgroundColor(unpack(color))
 	if currFrame == "ShopRite" then drawBlock() end
 	if currFrame == "iSpy" then drawiSpy() end
@@ -54,6 +69,7 @@ function love.draw()
 	if currFrame == "racing2" then drawRacing()  end
 	if currFrame == "discord" then drawScreen()  end
 	if currFrame == "cooking" then drawMama()  end
+	if currFrame == "fin" then drawFin()  end
 	drawButtons()
 end
 
@@ -65,6 +81,7 @@ function love.mousepressed(x, y, button)
 		TF,i = checkBoxes(x,y, button) 
 		if TF and button == 1 then
 			values[i] = 0
+			playAudio()
 			print("found it")
 		end
 	end

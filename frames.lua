@@ -1,5 +1,5 @@
 
-frames = {"ShopRite", "iSpy", "wario", "racing2", "discord", "cooking"}
+frames = {"ShopRite", "wario", "racing2", "iSpy", "discord", "cooking", "fin"}
 frameValue = 1
 currFrame = frames[frameValue]
 

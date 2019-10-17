@@ -157,7 +157,7 @@ end
 
 
 function drawRacing()
-
+	collectgarbage()
 	--print(lap > 2)
 	if lap > 2 then frame3() 
 	elseif not ready then frame1() 

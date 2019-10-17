@@ -79,7 +79,7 @@ local function frame2( ... )
 end
 
 function drawBlock()
-
+	collectgarbage()
 	if not ready then frame1() end
 	if ready then frame2() end
 
